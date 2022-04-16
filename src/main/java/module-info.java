@@ -4,6 +4,7 @@ module com.example.distributeprofit {
     requires java.sql;
     requires commons.math;
     requires mysql.connector.java;
+    requires org.jetbrains.annotations;
 
 
     opens App to javafx.fxml;

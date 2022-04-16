@@ -86,7 +86,7 @@ public class Controller {
 
     @FXML
     void initialize() {
-    AgentAdd.setOnAction(actionEvent ->  {
+        AgentAdd.setOnAction(actionEvent -> {
             String s[] = AgentField.getText().split(",");
             checkAgents(s[0]);
             agents.add(new Agent(s[0], Double.parseDouble(s[1])));
@@ -99,21 +99,22 @@ public class Controller {
                 AgentChoice.getItems().add(s[0]);
             }
         });
-    ProjectAdd.setOnAction(actionEvent -> {
-        String s[] = ProjectsField.getText().split(",");
-        checkAgents(s[0]);
-        agents.add(new Agent(s[0], Double.parseDouble(s[1])));
-        if (!checkAgents(s[0])) {
-            String tmp[] = new String[agents.size()];
-            for (int i = 0; i < agents.size(); i++) {
-                tmp[i] = agents.get(i).getName();
+        ProjectAdd.setOnAction(actionEvent -> {
+            String s[] = ProjectsField.getText().split(",");
+            checkAgents(s[0]);
+            agents.add(new Agent(s[0], Double.parseDouble(s[1])));
+            if (!checkAgents(s[0])) {
+                String tmp[] = new String[agents.size()];
+                for (int i = 0; i < agents.size(); i++) {
+                    tmp[i] = agents.get(i).getName();
+                }
+                AgentChoice.getItems().remove(s[0]);
+                AgentChoice.getItems().add(s[0]);
             }
-            AgentChoice.getItems().remove(s[0]);
-            AgentChoice.getItems().add(s[0]);
-        }
-    });
-    });
-}
+        });
+    }
+
+
     private boolean checkAgents(String name) {
         boolean flag = false;
         for (int i = 0; i < agents.size() ; i++) {
@@ -126,7 +127,7 @@ public class Controller {
     }
     private boolean checkProjects(String name) {
         boolean flag = false;
-        for (int i = 0; i < agents.get().size() ; i++) {
+        for (int i = 0; i < agents.size() ; i++) {
             if (Objects.equals(agents.get(i).getName(), name)){
                 agents.remove(i);
                 flag = true;

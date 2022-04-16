@@ -12,11 +12,27 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class SimplexMethods {
-    private Collection<LinearConstraint> constraints = new ArrayList<LinearConstraint>();
-    private LinearObjectiveFunction function;
-
+    private final Collection<LinearConstraint> constraints = new ArrayList<LinearConstraint>();
+    private final LinearObjectiveFunction function;
+    private final ArrayList<Double>  premium = new ArrayList<>();
+    private final ArrayList<Double> activeStatus = new ArrayList<>();
     public SimplexMethods(double[] elem, double constantTerm) {
         this.function = new LinearObjectiveFunction(elem, constantTerm);
+    }
+
+    public void addPremium(double premium){
+        this.premium.add(premium);
+    }
+    public void addActive(double active){
+        this.activeStatus.add(active);
+    }
+
+    public ArrayList<Double> getPremium() {
+        return premium;
+    }
+
+    public ArrayList<Double> getActiveStatus() {
+        return activeStatus;
     }
 
     public double[] makeConstraintsForTwo(double[] values) throws OptimizationException {
@@ -33,7 +49,12 @@ public class SimplexMethods {
     /*
     @param - double array size = 13
     values >= 0
+    AgentsCount*2 - size array
+
+    1,3
+    [0,0,0,1,0,1]
      */
+
     public double[] makeConstraintsForThree(double[] values) throws OptimizationException {
         constraints.add(new LinearConstraint(new double[]{-1, 0, 0, 1, 0, 0}, Relationship.GEQ, values[0]));
         constraints.add(new LinearConstraint(new double[]{0, -1, 0, 0, 1, 0}, Relationship.GEQ, values[1]));
@@ -62,4 +83,7 @@ public class SimplexMethods {
         }
         return result;
     }
+
+    //AgentName + " " + profit || AgentName + profit
+    //Agent 15678
 }
