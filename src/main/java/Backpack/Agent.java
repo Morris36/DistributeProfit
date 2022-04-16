@@ -26,9 +26,9 @@ public class Agent {
 
     public void addProject(Project project) {
         boolean flag = false;
-            for (Project value : projects) {
-                flag = value.equals(project);
-            }
+        for (Project value : projects) {
+            flag = value.equals(project);
+        }
         if (!flag)
             projects.add(project);
     }

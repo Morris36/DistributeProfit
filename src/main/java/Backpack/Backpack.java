@@ -8,10 +8,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 
-/**
- * @author Evgeny Dubov
- */
-//Agents,profit
 public class Backpack {
     private double tmpSum = 0;
     private double tmpExpenses;
@@ -37,39 +33,36 @@ public class Backpack {
             names[i] = projects.get(i).getName();
         }
         final int size = (int) (Math.round(budget) + 1);
-        double[] Sum = new double[size]; // Массив cуммарной прибыли
-        double[] Sum_old = new double[size]; // Массив cуммарной прибыли на предыдущем шаге
+        double[] Sum = new double[size];
+        double[] Sum_old = new double[size];
         ArrayList<String> arL = new ArrayList<>(size);
         ArrayList<String> arL_old = new ArrayList<>(size);
         for (int v = 0; v < (int) Math.round(budget) + 1; v++) {
             Sum[v] = 0;
             arL.add("");
             arL_old.add("");
-        } // начальное   обнуление
-        for (int i = 0; i < projects.size(); i++) //поочередно все предметы
-        {
+        }
+        for (int i = 0; i < projects.size(); i++) {
             for (int w = 0; w < (int) Math.round(budget) + 1; w++) {
-                Sum_old[w] = Sum[w]; // копирование массивов
+                Sum_old[w] = Sum[w];
                 arL_old.set(w, arL.get(w));
             }
             tmpExpenses = tmpEE[i];
             tmpProfit = tmpPP[i];
 
-            for (double v = 1; v < budget + 1; v++) //постепенно до величины затрат
-            {
+            for (double v = 1; v < budget + 1; v++) {
                 if (tmpExpenses <= v) {
-                    tmpSum = Sum_old[(int) ((int) v - Math.round(tmpExpenses))] + tmpProfit; //сум.прибыль если взять i-ый проект
-                    if (Sum_old[(int) v] < tmpSum) //Sum_old[v] сум.прибыль если не брать i-ый проект
-                    {
-                        Sum[(int) v] = tmpSum; //данный проект взят в набор
-                        arL.set((int) v, arL_old.get((int) ((int) v - Math.round(tmpExpenses))) + names[i] + " ");//внесение в список
+                    tmpSum = Sum_old[(int) ((int) v - Math.round(tmpExpenses))] + tmpProfit;
+                    if (Sum_old[(int) v] < tmpSum) {
+                        Sum[(int) v] = tmpSum;
+                        arL.set((int) v, arL_old.get((int) ((int) v - Math.round(tmpExpenses))) + names[i] + " ");
                     } else {
                         Sum[(int) v] = Sum_old[(int) v];
-                        arL.set((int) v, arL_old.get((int) v)); //список остается прежним
+                        arL.set((int) v, arL_old.get((int) v));
                     }
                 } else {
                     Sum[(int) v] = Sum_old[(int) v];
-                    arL.set((int) v, arL_old.get((int) v)); //список остается прежним
+                    arL.set((int) v, arL_old.get((int) v));
                 }
             }
         }

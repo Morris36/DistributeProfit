@@ -117,18 +117,19 @@ public class Controller {
 
     private boolean checkAgents(String name) {
         boolean flag = false;
-        for (int i = 0; i < agents.size() ; i++) {
-            if (Objects.equals(agents.get(i).getName(), name)){
+        for (int i = 0; i < agents.size(); i++) {
+            if (Objects.equals(agents.get(i).getName(), name)) {
                 agents.remove(i);
                 flag = true;
             }
         }
         return !flag;
     }
+
     private boolean checkProjects(String name) {
         boolean flag = false;
-        for (int i = 0; i < agents.size() ; i++) {
-            if (Objects.equals(agents.get(i).getName(), name)){
+        for (int i = 0; i < agents.size(); i++) {
+            if (Objects.equals(agents.get(i).getName(), name)) {
                 agents.remove(i);
                 flag = true;
             }

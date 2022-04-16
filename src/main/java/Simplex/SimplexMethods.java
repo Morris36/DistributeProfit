@@ -1,5 +1,7 @@
 package Simplex;
 
+import Backpack.Agent;
+import DataBank.Bank;
 import org.apache.commons.math.optimization.GoalType;
 import org.apache.commons.math.optimization.OptimizationException;
 import org.apache.commons.math.optimization.RealPointValuePair;
@@ -13,17 +15,24 @@ import java.util.Collection;
 
 public class SimplexMethods {
     private final Collection<LinearConstraint> constraints = new ArrayList<LinearConstraint>();
-    private final LinearObjectiveFunction function;
-    private final ArrayList<Double>  premium = new ArrayList<>();
+    private LinearObjectiveFunction function;
+    private final ArrayList<Double> premium = new ArrayList<>();
     private final ArrayList<Double> activeStatus = new ArrayList<>();
-    public SimplexMethods(double[] elem, double constantTerm) {
-        this.function = new LinearObjectiveFunction(elem, constantTerm);
+    private final ArrayList<Agent> agents;
+    private Bank bank;
+    private final int countAgent;
+
+    public SimplexMethods(Bank bank, int countAgent, ArrayList<Agent> agents1) {
+        this.bank = bank;
+        this.countAgent = countAgent;
+        agents = agents1;
     }
 
-    public void addPremium(double premium){
+    public void addPremium(double premium) {
         this.premium.add(premium);
     }
-    public void addActive(double active){
+
+    public void addActive(double active) {
         this.activeStatus.add(active);
     }
 
@@ -35,43 +44,50 @@ public class SimplexMethods {
         return activeStatus;
     }
 
-    public double[] makeConstraintsForTwo(double[] values) throws OptimizationException {
-        constraints.add(new LinearConstraint(new double[]{-1, 0, 1, 0}, Relationship.GEQ, values[0]));
-        constraints.add(new LinearConstraint(new double[]{0, -1, 0, 1}, Relationship.GEQ, values[1]));
-        constraints.add(new LinearConstraint(new double[]{0, 0, 1, 1}, Relationship.EQ, values[2]));
-        constraints.add(new LinearConstraint(new double[]{1, 0, 0, 0}, Relationship.GEQ, values[3]));
-        constraints.add(new LinearConstraint(new double[]{0, 1, 0, 0}, Relationship.GEQ, values[4]));
-        constraints.add(new LinearConstraint(new double[]{1, 0, 0, 0}, Relationship.LEQ, values[5]));
-        constraints.add(new LinearConstraint(new double[]{0, 1, 0, 0}, Relationship.LEQ, values[6]));
-        return makeResult(2);
+    public double[] exMethod() throws OptimizationException {
+        double[] tmp = new double[countAgent * 2];
+        for (int i = 0; i < bank.getUnions().size(); i++) {
+            if (bank.getUnions().get(i).getAgents().size() == 1) {
+                tmp[i] = -1;
+                tmp[i + countAgent] = 1;
+                constraints.add(new LinearConstraint(tmp, Relationship.GEQ, bank.getUnions().get(i).getProfit()));
+                tmp = new double[countAgent * 2];
+            } else {
+                if (bank.getUnions().get(i).getAgents().size() == countAgent) {
+                    for (int j = countAgent; j < countAgent * 2; j++) {
+                        tmp[j] = 1;
+                    }
+                    constraints.add(new LinearConstraint(tmp, Relationship.EQ, bank.getUnions().get(i).getProfit()));
+                    tmp = new double[countAgent * 2];
+                } else {
+                    for (int j = 0; j < bank.getUnions().get(i).getAgents().size(); j++) {
+                        tmp[countAgent + countIndexAgent(bank.getUnions().get(i).getAgents().get(j))] = 1;
+                    }
+                    constraints.add(new LinearConstraint(tmp, Relationship.GEQ, bank.getUnions().get(i).getProfit()));
+                    tmp = new double[countAgent * 2];
+                }
+            }
+        }
+        tmp = new double[countAgent * 2];
+        int n = 0;
+        for (int i = 0; i < countAgent; i++) {
+            tmp[i] = 1;
+            constraints.add(new LinearConstraint(tmp, Relationship.GEQ, premium.get(n)));
+            constraints.add(new LinearConstraint(tmp, Relationship.LEQ, premium.get(n + 1)));
+            n += 2;
+        }
+        tmp = new double[countAgent * 2];
+        makeFunction();
+        return makeResult(countAgent);
     }
 
-    /*
-    @param - double array size = 13
-    values >= 0
-    AgentsCount*2 - size array
-
-    1,3
-    [0,0,0,1,0,1]
-     */
-
-    public double[] makeConstraintsForThree(double[] values) throws OptimizationException {
-        constraints.add(new LinearConstraint(new double[]{-1, 0, 0, 1, 0, 0}, Relationship.GEQ, values[0]));
-        constraints.add(new LinearConstraint(new double[]{0, -1, 0, 0, 1, 0}, Relationship.GEQ, values[1]));
-        constraints.add(new LinearConstraint(new double[]{0, 0, -1, 0, 0, 1}, Relationship.GEQ, values[2]));
-        constraints.add(new LinearConstraint(new double[]{0, 0, 0, 1, 1, 0}, Relationship.GEQ, values[3]));
-        constraints.add(new LinearConstraint(new double[]{0, 0, 0, 0, 1, 1}, Relationship.GEQ, values[4]));
-        constraints.add(new LinearConstraint(new double[]{0, 0, 0, 1, 0, 1}, Relationship.GEQ, values[5]));
-        constraints.add(new LinearConstraint(new double[]{0, 0, 0, 1, 1, 1}, Relationship.EQ, values[6]));
-        constraints.add(new LinearConstraint(new double[]{1, 0, 0, 0, 0, 0}, Relationship.GEQ, values[7]));
-        constraints.add(new LinearConstraint(new double[]{0, 1, 0, 0, 0, 0}, Relationship.GEQ, values[8]));
-        constraints.add(new LinearConstraint(new double[]{0, 0, 1, 0, 0, 0}, Relationship.GEQ, values[9]));
-        constraints.add(new LinearConstraint(new double[]{1, 0, 0, 0, 0, 0}, Relationship.LEQ, values[10]));
-        constraints.add(new LinearConstraint(new double[]{0, 1, 0, 0, 0, 0}, Relationship.LEQ, values[11]));
-        constraints.add(new LinearConstraint(new double[]{0, 0, 1, 0, 0, 0}, Relationship.LEQ, values[12]));
-        return makeResult(3);
+    private int countIndexAgent(Agent agent) {
+        for (int i = 0; i < agents.size(); i++) {
+            if (agents.get(i) == agent)
+                return i;
+        }
+        return 0;
     }
-    //Для четырёх агентов в разработке
 
     private double[] makeResult(int countAgent) throws OptimizationException {
         RealPointValuePair solution = new SimplexSolver().optimize(function, constraints, GoalType.MAXIMIZE, false);
@@ -84,6 +100,21 @@ public class SimplexMethods {
         return result;
     }
 
-    //AgentName + " " + profit || AgentName + profit
-    //Agent 15678
+    public void makeFunction() {
+        double[] func = new double[countAgent * 2];
+        int n = 0;
+        for (int i = 0; i < countAgent; i++) {
+            func[i] = activeStatus.get(i) * (premium.get(n + 1) - premium.get(n));
+            n += 2;
+        }
+        n = 0;
+        for (int i = countAgent; i < countAgent * 2; i++) {
+            func[i] = 0;
+        }
+        double agc = 0;
+        for (int i = 0; i < countAgent; i++) {
+            agc += func[i] * premium.get(n) * -1;
+        }
+        function = new LinearObjectiveFunction(func, agc);
+    }
 }
