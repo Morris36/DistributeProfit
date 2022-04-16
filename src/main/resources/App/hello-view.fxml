@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.ScrollBar?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="313.0" prefWidth="808.0" style="-fx-background-color: #2E3348;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="App.Controller">
+   <TextField fx:id="AgentCountField" layoutX="202.0" layoutY="207.0" prefHeight="26.0" prefWidth="73.0" />
+   <TextField fx:id="ProjectsField" layoutX="122.0" layoutY="59.0" />
+   <TextField fx:id="MarkField" layoutX="122.0" layoutY="135.0" />
+   <Button fx:id="End" layoutX="122.0" layoutY="260.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="234.0" text="Result" />
+   <TextField fx:id="AgentField" layoutX="122.0" layoutY="20.0" />
+   <ChoiceBox fx:id="AgentChoice" layoutX="306.0" layoutY="20.0" prefWidth="150.0" />
+   <ChoiceBox fx:id="ProjectsChoice" layoutX="306.0" layoutY="59.0" prefWidth="150.0" />
+   <Button fx:id="AgentAdd" layoutX="20.0" layoutY="20.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="73.0" text="Add" />
+   <Button fx:id="ProjectAdd" layoutX="20.0" layoutY="59.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="73.0" text="Add" />
+   <Button fx:id="ProfAdd" layoutX="20.0" layoutY="207.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="73.0" text="Add" />
+   <Button fx:id="MarkAdd" layoutX="20.0" layoutY="135.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="73.0" text="Add" />
+   <TextField fx:id="MinProfField" layoutX="122.0" layoutY="207.0" prefHeight="26.0" prefWidth="73.0" />
+   <TextField fx:id="MaxProfField" layoutX="282.0" layoutY="207.0" prefHeight="26.0" prefWidth="73.0" />
+   <TextArea fx:id="TextArea" layoutX="474.0" layoutY="11.0" prefHeight="274.0" prefWidth="277.0" />
+   <ScrollBar fx:id="VS" layoutX="751.0" layoutY="11.0" orientation="VERTICAL" prefHeight="274.0" prefWidth="16.0" />
+   <ScrollBar fx:id="HS" layoutX="474.0" layoutY="285.0" prefHeight="16.0" prefWidth="277.0" />
+</AnchorPane>
